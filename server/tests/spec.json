@@ -1,0 +1,17 @@
+{
+  "state": "The production login page returns HTTP 503 for all customers.",
+  "questions": {
+    "outage": {"type": "noul", "instructions": "Does this report an ongoing outage?"},
+    "team": {
+      "type": "choice",
+      "instructions": "Which team should handle this ticket?",
+      "criteria": {"billing": "Payments and refunds.", "engineering": "Outages and errors."}
+    },
+    "impact": {
+      "type": "score",
+      "instructions": "Rate the customer impact.",
+      "criteria": ["None", "Some", "All"],
+      "values": [0, 1, 2]
+    }
+  }
+}

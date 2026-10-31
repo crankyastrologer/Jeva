@@ -79,10 +79,13 @@ def _load_lora_strict(model, adapter_path: str, saved_keys: set[str]):
 
 
 class TextBackbone(nn.Module):
-    def __init__(self, cfg):
+    def __init__(self, cfg, *, quantize=None, device=None):
         super().__init__()
         self.cfg = cfg
         dtype = DTYPES.get(cfg.torch_dtype, torch.bfloat16)
+        if quantize not in {None, "4bit", "8bit"}:
+            raise ValueError("quantize must be None, '4bit', or '8bit'")
+        self.quantize = quantize
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             cfg.tokenizer_path or cfg.backbone,
@@ -100,6 +103,23 @@ class TextBackbone(nn.Module):
             trust_remote_code=cfg.trust_remote_code,
             local_files_only=cfg.local_files_only,
         )
+        if quantize is not None:
+            from transformers import BitsAndBytesConfig
+
+            if quantize == "4bit":
+                kwargs["quantization_config"] = BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_quant_type="nf4",
+                    bnb_4bit_compute_dtype=dtype,
+                    bnb_4bit_use_double_quant=True,
+                )
+            else:
+                kwargs["quantization_config"] = BitsAndBytesConfig(load_in_8bit=True)
+            target = torch.device(device) if device is not None else None
+            if target is not None and target.type == "cuda":
+                kwargs["device_map"] = 0 if target.index is None else target.index
+            else:
+                kwargs["device_map"] = "auto"
         try:
             self.model = AutoModel.from_pretrained(dtype=dtype, **kwargs)
         except TypeError:
