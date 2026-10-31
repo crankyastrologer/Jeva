@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from .. import schemas as S
 from ..converters import build_questions
 from ..deps import EngineDep, SettingsDep
-from ..execution import Job, submit
+from ..execution import Job, JobKind, submit
 from ..openai_spec import message_text, openai_usage, parse_decision_spec
 from ..streaming import chunk_text, sse, sse_headers
 
@@ -26,7 +26,7 @@ async def chat_completions(
         raise HTTPException(400, "At least one message with role 'user' is required.")
     spec = parse_decision_spec(message_text(user_messages[-1]))
     questions = build_questions(spec.questions)
-    decision = await submit(engine, settings, Job("decide", (spec.state, questions)))
+    decision = await submit(engine, settings, Job(JobKind.DECIDE, (spec.state, questions)))
     content = json.dumps(decision.to_dict(), ensure_ascii=False)
     usage = openai_usage(decision.usage)
     completion_id = S.new_id("chatcmpl")
@@ -91,7 +91,7 @@ async def completions(payload: S.CompletionRequest, engine: EngineDep, settings:
         raise HTTPException(400, "prompt must be a nonempty string.")
     spec = parse_decision_spec(prompt)
     questions = build_questions(spec.questions)
-    decision = await submit(engine, settings, Job("decide", (spec.state, questions)))
+    decision = await submit(engine, settings, Job(JobKind.DECIDE, (spec.state, questions)))
     text = json.dumps(decision.to_dict(), ensure_ascii=False)
     usage = openai_usage(decision.usage)
     completion_id = S.new_id("cmpl")
