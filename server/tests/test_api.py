@@ -379,3 +379,18 @@ def test_queue_full(client, settings):
 
 def test_openapi(client):
     assert client.get("/openapi.json").status_code == 200
+    paths = set(client.get("/openapi.json").json()["paths"])
+    assert paths == {
+        "/",
+        "/healthz",
+        "/metrics",
+        "/v1/models",
+        "/v1/models/{model_id}",
+        "/v1/decide",
+        "/v1/rank",
+        "/v1/cache",
+        "/v1/cache/clear",
+        "/v1/cache/prime",
+        "/v1/chat/completions",
+        "/v1/completions",
+    }
