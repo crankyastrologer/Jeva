@@ -50,8 +50,10 @@ def main():
             time.sleep(2)
 
         body, warmup = post(client, f"{STATE} Warmup.")
-        print(f"warmup {warmup:.0f}ms outage={body['answers']['outage']['noul']:.4f} "
-              f"team={body['answers']['team']['choice']} score={body['answers']['impact']['score']:.2f}")
+        print(
+            f"warmup {warmup:.0f}ms outage={body['answers']['outage']['noul']:.4f} "
+            f"team={body['answers']['team']['choice']} score={body['answers']['impact']['score']:.2f}"
+        )
         sequential(client, "prime", count=8)
 
         for round_index in range(2):

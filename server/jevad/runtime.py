@@ -69,7 +69,7 @@ class InferenceEngine:
         limit = self.default_timeout if timeout is None else timeout
         try:
             return await asyncio.wait_for(future, timeout=limit)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             future.cancel()
             raise
 
@@ -85,7 +85,7 @@ class InferenceEngine:
                     break
                 try:
                     batch.append(await asyncio.wait_for(self._queue.get(), remaining))
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     break
             try:
                 results = await asyncio.to_thread(self._executor, [item for _, item in batch])

@@ -1,0 +1,387 @@
+{
+  "cache": {
+    "mode": "hybrid",
+    "options": {
+      "bytes": 0,
+      "entries": 0
+    },
+    "sets": {
+      "bytes": 0,
+      "entries": 0
+    },
+    "states": {
+      "bytes": 0,
+      "entries": 0
+    }
+  },
+  "chat": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "{\"answers\": {\"outage\": {\"kind\": \"noul\", \"probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"conditional_probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"null_probability\": 0.0, \"choice\": null, \"noul\": 0.8, \"score\": null, \"confidence\": 0.8, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"team\": {\"kind\": \"choice\", \"probabilities\": {\"billing\": 0.5, \"engineering\": 0.5}, \"conditional_probabilities\": {\"billing\": 0.5, \"engineering\": 0.5}, \"null_probability\": 0.0, \"choice\": \"billing\", \"noul\": null, \"score\": null, \"confidence\": 0.5, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"impact\": {\"kind\": \"score\", \"probabilities\": {\"None\": 0.3333333333333333, \"Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"conditional_probabilities\": {\"None\": 0.3333333333333333, \"Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"null_probability\": 0.0, \"choice\": null, \"noul\": null, \"score\": 1.0, \"confidence\": 0.3333333333333333, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}}, \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 2.0}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "model": "jevad-stub",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 0,
+      "prompt_tokens": 12,
+      "total_tokens": 12
+    }
+  },
+  "chat_stream": [
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "",
+            "role": "assistant"
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "{\"answers\": {\"outage\": {\"kind\": \"noul\", \"probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"conditional_probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"null_probability\": 0.0, \"choice\": null, \"noul\": 0.8, \"score\": null, \"confidence\": 0.8, \"candidate_probabilities",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"team\": {\"kind\": \"choice\", \"probabilities\":",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": " {\"billing\": 0.5, \"engineering\": 0.5}, \"conditional_probabilities\": {\"billing\": 0.5, \"engineering\": 0.5}, \"null_probability\": 0.0, \"choice\": \"billing\", \"noul\": null, \"score\": null, \"confidence\": 0.5, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\":",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": " 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"impact\": {\"kind\": \"score\", \"probabilities\": {\"None\": 0.3333333333333333, \"",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"conditional_probabilities\": {\"None\": 0.3333333333333333, \"Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"null_probability\": 0.0, \"choice\": null, \"noul\": null, \"score\": 1.0, \"confidence\": 0.33",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "33333333333333, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}}, \"u",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": "sage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 2.0}",
+            "role": null
+          },
+          "finish_reason": null,
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [
+        {
+          "delta": {
+            "content": null,
+            "role": null
+          },
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null
+        }
+      ],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": null
+    },
+    {
+      "choices": [],
+      "model": "jevad-stub",
+      "object": "chat.completion.chunk",
+      "usage": {
+        "completion_tokens": 0,
+        "prompt_tokens": 12,
+        "total_tokens": 12
+      }
+    }
+  ],
+  "completions": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "text": "{\"answers\": {\"outage\": {\"kind\": \"noul\", \"probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"conditional_probabilities\": {\"false\": 0.2, \"true\": 0.8}, \"null_probability\": 0.0, \"choice\": null, \"noul\": 0.8, \"score\": null, \"confidence\": 0.8, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"team\": {\"kind\": \"choice\", \"probabilities\": {\"billing\": 0.5, \"engineering\": 0.5}, \"conditional_probabilities\": {\"billing\": 0.5, \"engineering\": 0.5}, \"null_probability\": 0.0, \"choice\": \"billing\", \"noul\": null, \"score\": null, \"confidence\": 0.5, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}, \"impact\": {\"kind\": \"score\", \"probabilities\": {\"None\": 0.3333333333333333, \"Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"conditional_probabilities\": {\"None\": 0.3333333333333333, \"Some\": 0.3333333333333333, \"All\": 0.3333333333333333}, \"null_probability\": 0.0, \"choice\": null, \"noul\": null, \"score\": 1.0, \"confidence\": 0.3333333333333333, \"candidate_probabilities\": [], \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 1.5}}, \"usage\": {\"input_tokens\": 12, \"requested_input_tokens\": 12, \"encoded_state_tokens\": 8, \"encoded_option_tokens\": 4, \"cached_option_tokens\": 0, \"output_tokens\": 0, \"truncated_tokens\": 0}, \"latency_ms\": 2.0}"
+      }
+    ],
+    "model": "jevad-stub",
+    "object": "text_completion",
+    "usage": {
+      "completion_tokens": 0,
+      "prompt_tokens": 12,
+      "total_tokens": 12
+    }
+  },
+  "decide": {
+    "answers": {
+      "impact": {
+        "candidate_probabilities": [],
+        "choice": null,
+        "conditional_probabilities": {
+          "All": 0.3333333333333333,
+          "None": 0.3333333333333333,
+          "Some": 0.3333333333333333
+        },
+        "confidence": 0.3333333333333333,
+        "kind": "score",
+        "noul": null,
+        "null_probability": 0.0,
+        "probabilities": {
+          "All": 0.3333333333333333,
+          "None": 0.3333333333333333,
+          "Some": 0.3333333333333333
+        },
+        "score": 1.0,
+        "usage": {
+          "cached_option_tokens": 0,
+          "encoded_option_tokens": 4,
+          "encoded_state_tokens": 8,
+          "input_tokens": 12,
+          "output_tokens": 0,
+          "requested_input_tokens": 12,
+          "truncated_tokens": 0
+        }
+      },
+      "outage": {
+        "candidate_probabilities": [],
+        "choice": null,
+        "conditional_probabilities": {
+          "false": 0.2,
+          "true": 0.8
+        },
+        "confidence": 0.8,
+        "kind": "noul",
+        "noul": 0.8,
+        "null_probability": 0.0,
+        "probabilities": {
+          "false": 0.2,
+          "true": 0.8
+        },
+        "score": null,
+        "usage": {
+          "cached_option_tokens": 0,
+          "encoded_option_tokens": 4,
+          "encoded_state_tokens": 8,
+          "input_tokens": 12,
+          "output_tokens": 0,
+          "requested_input_tokens": 12,
+          "truncated_tokens": 0
+        }
+      },
+      "team": {
+        "candidate_probabilities": [],
+        "choice": "billing",
+        "conditional_probabilities": {
+          "billing": 0.5,
+          "engineering": 0.5
+        },
+        "confidence": 0.5,
+        "kind": "choice",
+        "noul": null,
+        "null_probability": 0.0,
+        "probabilities": {
+          "billing": 0.5,
+          "engineering": 0.5
+        },
+        "score": null,
+        "usage": {
+          "cached_option_tokens": 0,
+          "encoded_option_tokens": 4,
+          "encoded_state_tokens": 8,
+          "input_tokens": 12,
+          "output_tokens": 0,
+          "requested_input_tokens": 12,
+          "truncated_tokens": 0
+        }
+      }
+    },
+    "usage": {
+      "cached_option_tokens": 0,
+      "encoded_option_tokens": 4,
+      "encoded_state_tokens": 8,
+      "input_tokens": 12,
+      "output_tokens": 0,
+      "requested_input_tokens": 12,
+      "truncated_tokens": 0
+    }
+  },
+  "error_not_found": {
+    "error": {
+      "code": null,
+      "message": "Model 'unknown' not found.",
+      "param": null,
+      "type": "not_found_error"
+    }
+  },
+  "error_validation": {
+    "error": {
+      "code": "invalid_request",
+      "message": "body.questions: Value error, questions must not be empty",
+      "param": null,
+      "type": "invalid_request_error"
+    }
+  },
+  "healthz": {
+    "cache": "hybrid",
+    "device": "cpu",
+    "model": "jevad-stub",
+    "queue": {
+      "capacity": 4,
+      "depth": 0
+    },
+    "status": "ok"
+  },
+  "model": {
+    "object": "model",
+    "owned_by": "jeva"
+  },
+  "models": {
+    "data": [
+      {
+        "object": "model",
+        "owned_by": "jeva"
+      }
+    ],
+    "object": "list"
+  },
+  "prime": {
+    "cache": {
+      "mode": "hybrid",
+      "options": {
+        "bytes": 0,
+        "entries": 0
+      },
+      "sets": {
+        "bytes": 0,
+        "entries": 0
+      },
+      "states": {
+        "bytes": 0,
+        "entries": 0
+      }
+    },
+    "primed": {
+      "cached_tokens": 0,
+      "encoded_options": 2,
+      "encoded_tokens": 0,
+      "kind": "choice",
+      "options": 2,
+      "set_cached": true,
+      "truncated_tokens": 0
+    }
+  },
+  "rank": {
+    "null_probability": 0.0,
+    "ranking": [
+      {
+        "index": 0,
+        "label": "refund",
+        "probability": 0.5
+      }
+    ],
+    "usage": {
+      "cached_option_tokens": 0,
+      "encoded_option_tokens": 4,
+      "encoded_state_tokens": 8,
+      "input_tokens": 12,
+      "output_tokens": 0,
+      "requested_input_tokens": 12,
+      "truncated_tokens": 0
+    }
+  }
+}

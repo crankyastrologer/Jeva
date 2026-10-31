@@ -5,7 +5,6 @@ import statistics
 import time
 
 import torch
-
 from jeva import Choice, Jeva, Noul, Score
 
 QUESTIONS = {
@@ -42,18 +41,25 @@ def timed(fn):
 
 
 def summarize(name, samples):
-    print(f"{name}: median={statistics.median(samples):.1f}ms "
-          f"min={min(samples):.1f}ms max={max(samples):.1f}ms n={len(samples)}")
+    print(
+        f"{name}: median={statistics.median(samples):.1f}ms "
+        f"min={min(samples):.1f}ms max={max(samples):.1f}ms n={len(samples)}"
+    )
 
 
 def main():
     load_started = time.perf_counter()
     model = Jeva.from_pretrained(
-        "./models/Jeva-4B", device="cuda", quantize="4bit",
-        option_chunk_size=4, option_batch_tokens=4096,
+        "./models/Jeva-4B",
+        device="cuda",
+        quantize="4bit",
+        option_chunk_size=4,
+        option_batch_tokens=4096,
     )
-    print(f"load {time.perf_counter() - load_started:.1f}s "
-          f"vram {torch.cuda.memory_allocated() / 2**30:.2f}GiB")
+    print(
+        f"load {time.perf_counter() - load_started:.1f}s "
+        f"vram {torch.cuda.memory_allocated() / 2**30:.2f}GiB"
+    )
 
     _, warmup = timed(lambda: model.system_one(BASE_STATE, QUESTIONS))
     print(f"warmup {warmup:.1f}ms")
@@ -73,11 +79,16 @@ def main():
         cold_repeat.append(elapsed)
     summarize("repeated request (state+option cache)", cold_repeat)
     info = model.cache_info()
-    print("cache hits", json.dumps({
-        "states": info["states"]["hits"],
-        "options": info["options"]["hits"],
-        "sets": info["sets"]["hits"],
-    }))
+    print(
+        "cache hits",
+        json.dumps(
+            {
+                "states": info["states"]["hits"],
+                "options": info["options"]["hits"],
+                "sets": info["sets"]["hits"],
+            }
+        ),
+    )
 
     batch_requests = [(f"{BASE_STATE} Batch {index}.", QUESTIONS) for index in range(4)]
     sequential_for_batch = []
@@ -88,11 +99,15 @@ def main():
     responses = model.system_one_many(batch_requests)
     batch_elapsed = (time.perf_counter() - batch_started) * 1000
     sequential_total = sum(sequential_for_batch)
-    print(f"4 requests sequential total {sequential_total:.1f}ms | "
-          f"batched total {batch_elapsed:.1f}ms | "
-          f"speedup {sequential_total / batch_elapsed:.2f}x")
-    print("batch encoded option tokens",
-          [response.usage.encoded_option_tokens for response in responses])
+    print(
+        f"4 requests sequential total {sequential_total:.1f}ms | "
+        f"batched total {batch_elapsed:.1f}ms | "
+        f"speedup {sequential_total / batch_elapsed:.2f}x"
+    )
+    print(
+        "batch encoded option tokens",
+        [response.usage.encoded_option_tokens for response in responses],
+    )
 
     try:
         model._compiled_decide = torch.compile(model.model.decide_from_option_cache, dynamic=False)

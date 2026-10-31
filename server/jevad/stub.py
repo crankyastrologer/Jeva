@@ -94,7 +94,9 @@ class StubJeva:
         ]
         if top_k is not None:
             ranking = ranking[:top_k]
-        return RankResult(ranking=ranking, null_probability=0.0, usage=self._usage(), latency_ms=3.0)
+        return RankResult(
+            ranking=ranking, null_probability=0.0, usage=self._usage(), latency_ms=3.0
+        )
 
     def cache_info(self):
         return {

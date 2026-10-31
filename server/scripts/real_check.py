@@ -3,7 +3,6 @@ from __future__ import annotations
 import time
 
 import torch
-
 from jeva import Choice, Jeva, Noul, Score
 
 started = time.perf_counter()

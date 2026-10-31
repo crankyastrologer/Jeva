@@ -4,7 +4,6 @@ import statistics
 import time
 
 import torch
-
 from jeva import Choice, Jeva
 
 STATE = "The production login page returns HTTP 503 for all customers."
@@ -31,16 +30,21 @@ def run(model, tag, instructions, count=5):
         )
         samples.append((time.perf_counter() - started) * 1000)
         encoded.append(response.answers["q"].usage.encoded_option_tokens)
-    print(f"{tag}: median={statistics.median(samples):.0f}ms "
-          f"samples={[round(value) for value in samples]} "
-          f"encoded_option_tokens={encoded}")
+    print(
+        f"{tag}: median={statistics.median(samples):.0f}ms "
+        f"samples={[round(value) for value in samples]} "
+        f"encoded_option_tokens={encoded}"
+    )
     return samples
 
 
 def main():
     model = Jeva.from_pretrained(
-        "./models/Jeva-4B", device="cuda", quantize="4bit",
-        option_chunk_size=4, option_batch_tokens=4096,
+        "./models/Jeva-4B",
+        device="cuda",
+        quantize="4bit",
+        option_chunk_size=4,
+        option_batch_tokens=4096,
     )
     model.system_one(f"{STATE} warmup.", {"q": Choice("Warm up.", {"a": "A.", "b": "B."})})
     print(f"vram {torch.cuda.memory_allocated() / 2**30:.2f}GiB")
@@ -51,8 +55,10 @@ def main():
 
     model.clear_cache()
     primed = model.prime_options([f"{key}: {text}" for key, text in BANK.items()], kind="choice")
-    print(f"prime: {primed['encoded_tokens']} tokens in {primed['latency_ms']:.0f}ms "
-          f"set_cached={primed['set_cached']}")
+    print(
+        f"prime: {primed['encoded_tokens']} tokens in {primed['latency_ms']:.0f}ms "
+        f"set_cached={primed['set_cached']}"
+    )
     run(model, "primed, same question", instructions)
 
     model.cache = "none"
@@ -61,7 +67,11 @@ def main():
     model.cache = "hybrid"
     model.clear_cache()
     model.prime_options([f"{key}: {text}" for key, text in BANK.items()], kind="choice")
-    for variant in ("Triage the ticket.", "Route this customer request.", "Select the owning team."):
+    for variant in (
+        "Triage the ticket.",
+        "Route this customer request.",
+        "Select the owning team.",
+    ):
         run(model, f"primed, new instructions ({variant[:18]}...)", variant, count=2)
 
 

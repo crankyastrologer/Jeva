@@ -22,21 +22,32 @@ QUESTIONS = {
         values=[0, 1, 2],
     ),
 }
-STATE = ("The production login page returns HTTP 503. "
-         "All customers are unable to sign in or complete purchases.")
+STATE = (
+    "The production login page returns HTTP 503. "
+    "All customers are unable to sign in or complete purchases."
+)
 
 
 def show(tag, result):
-    print(tag, "noul", round(result.answers["outage"].noul, 6),
-          "team", result.answers["team"].choice,
-          round(result.answers["team"].probabilities["engineering"], 6),
-          "score", round(result.answers["impact"].score, 6))
+    print(
+        tag,
+        "noul",
+        round(result.answers["outage"].noul, 6),
+        "team",
+        result.answers["team"].choice,
+        round(result.answers["team"].probabilities["engineering"], 6),
+        "score",
+        round(result.answers["impact"].score, 6),
+    )
 
 
 def main():
     model = Jeva.from_pretrained(
-        "./models/Jeva-4B", device="cuda", quantize="4bit",
-        option_chunk_size=4, option_batch_tokens=4096,
+        "./models/Jeva-4B",
+        device="cuda",
+        quantize="4bit",
+        option_chunk_size=4,
+        option_batch_tokens=4096,
     )
     model.system_one(f"{STATE} warm", QUESTIONS)
 
@@ -51,10 +62,12 @@ def main():
     model.clear_cache()
     show("chunk8 warmup-suffix", model.system_one(f"{STATE} Warmup.", QUESTIONS))
 
-    responses = model.system_one_many([
-        (STATE, QUESTIONS),
-        (f"{STATE} Other.", QUESTIONS),
-    ])
+    responses = model.system_one_many(
+        [
+            (STATE, QUESTIONS),
+            (f"{STATE} Other.", QUESTIONS),
+        ]
+    )
     show("batched exact", responses[0])
     show("batched other", responses[1])
 

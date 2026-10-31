@@ -5,7 +5,6 @@ import json
 
 import pytest
 from fastapi.testclient import TestClient
-
 from jeva import Choice, Noul, Score
 from jeva.types import Answer, DecisionResponse, RankedItem, RankResult, Usage
 from jevad.app import create_app
@@ -110,7 +109,9 @@ class FakeJeva:
         ]
         if top_k is not None:
             ranking = ranking[:top_k]
-        return RankResult(ranking=ranking, null_probability=0.0, usage=self._usage(), latency_ms=3.0)
+        return RankResult(
+            ranking=ranking, null_probability=0.0, usage=self._usage(), latency_ms=3.0
+        )
 
     def prime_options(self, options, *, kind="choice"):
         self.calls.append(("prime_options", kind, list(options)))

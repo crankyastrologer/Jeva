@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jevad"
+version = "0.2.0"
+description = "OpenAI-compatible inference server for Jeva typed decisions"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+]
+
+[project.optional-dependencies]
+dev = ["httpx>=0.27", "pytest>=8", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+include = ["jevad*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["jevad", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E501", "B023"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

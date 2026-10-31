@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import time
-from pathlib import Path
 
 import httpx
 
@@ -31,21 +30,26 @@ def main():
         print("prime", primed.status_code, primed.json()["primed"]["encoded_tokens"], "tokens")
 
         for instructions in ("Route this ticket.", "Which team owns it?", "Pick the owning team."):
-            response = client.post("/v1/decide", json={
-                "state": STATE,
-                "questions": {
-                    "team": {
-                        "type": "choice",
-                        "instructions": instructions,
-                        "criteria": BANK,
-                    }
+            response = client.post(
+                "/v1/decide",
+                json={
+                    "state": STATE,
+                    "questions": {
+                        "team": {
+                            "type": "choice",
+                            "instructions": instructions,
+                            "criteria": BANK,
+                        }
+                    },
                 },
-            })
+            )
             response.raise_for_status()
             answer = response.json()["answers"]["team"]
-            print(f"{instructions!r}: {answer['choice']} "
-                  f"encoded={answer['usage']['encoded_option_tokens']} "
-                  f"cached={answer['usage']['cached_option_tokens']}")
+            print(
+                f"{instructions!r}: {answer['choice']} "
+                f"encoded={answer['usage']['encoded_option_tokens']} "
+                f"cached={answer['usage']['cached_option_tokens']}"
+            )
 
         print("cache", json.dumps(client.get("/v1/cache").json()["options"]))
 

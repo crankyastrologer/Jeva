@@ -180,7 +180,7 @@ Files: `src/jeva/inference.py`, `server/jevad/config.py`.
 ### 2.8 Server plumbing
 
 Files: `server/jevad/{runtime,metrics,config,schemas,stub}.py`,
-`server/tests/*`.
+`server/scripts/*`.
 
 * Metrics: `jeva_batches_total`, `jeva_batch_jobs_total` added; queue depth and
   inflight gauges already existed.
@@ -374,19 +374,19 @@ cd ~/Jeva && source .venv/bin/activate
 cd server && ../.venv/bin/python -m pytest && cd ..
 
 # real-model sanity + VRAM
-python server/tests/real_check.py
+python server/scripts/real_check.py
 
 # cache/batching benchmarks (one model process at a time)
-python server/tests/bench_real.py
-python server/tests/bench_shapes.py
-python server/tests/bench_ab.py
-python server/tests/bench_prime.py
-python server/tests/check_numerics.py
+python server/scripts/bench_real.py
+python server/scripts/bench_shapes.py
+python server/scripts/bench_ab.py
+python server/scripts/bench_prime.py
+python server/scripts/check_numerics.py
 
 # HTTP A/B (batching on)
 JEVA_MODEL=./models/Jeva-4B JEVA_QUANTIZE=4bit \
 JEVA_OPTION_CHUNK_SIZE=4 JEVA_OPTION_BATCH_TOKENS=4096 \
 JEVA_MAX_BATCH=8 JEVA_BATCH_WINDOW_MS=5 \
 uvicorn jevad.app:app --app-dir server --port 8079
-python server/tests/bench_http.py
+python server/scripts/bench_http.py
 ```

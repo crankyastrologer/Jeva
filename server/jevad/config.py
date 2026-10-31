@@ -58,7 +58,7 @@ class Settings:
     port: int = 8000
 
     @classmethod
-    def from_env(cls) -> "Settings":
+    def from_env(cls) -> Settings:
         model = os.environ.get("JEVA_MODEL") or _local_checkpoint(cls.model)
         default_name = Path(model).name if os.sep in model or model.startswith(".") else model
         return cls(

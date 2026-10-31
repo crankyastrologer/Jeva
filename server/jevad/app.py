@@ -12,9 +12,8 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
-from pydantic import ValidationError
-
 from jeva import Choice, Noul, Score
+from pydantic import ValidationError
 
 from . import schemas as S
 from .config import Settings
@@ -95,7 +94,9 @@ def parse_decision_spec(text: str) -> S.DecideRequest:
             f"{exc.msg} at line {exc.lineno} column {exc.colno}",
         ) from exc
     if not isinstance(data, dict):
-        raise HTTPException(400, "Request content must be a JSON object, not a JSON array or scalar.")
+        raise HTTPException(
+            400, "Request content must be a JSON object, not a JSON array or scalar."
+        )
     try:
         return S.DecideRequest.model_validate(data)
     except ValidationError as exc:
@@ -142,7 +143,7 @@ async def submit(engine: InferenceEngine, settings: Settings, job: Job) -> Any:
         return await engine.submit(job, timeout=settings.request_timeout)
     except QueueFullError as exc:
         raise HTTPException(429, "Inference queue is full; retry later.") from exc
-    except asyncio.TimeoutError as exc:
+    except TimeoutError as exc:
         raise HTTPException(504, "Request timed out waiting for the model.") from exc
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
@@ -151,7 +152,7 @@ async def submit(engine: InferenceEngine, settings: Settings, job: Job) -> Any:
 
 
 def chunk_text(text: str, size: int = 256) -> list[str]:
-    return [text[index:index + size] for index in range(0, len(text), size)]
+    return [text[index : index + size] for index in range(0, len(text), size)]
 
 
 def sse(payload: Any) -> str:
@@ -306,9 +307,7 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
 
     @app.get("/v1/models", response_model=S.ModelList)
     async def list_models():
-        return S.ModelList(
-            data=[S.ModelCard(id=settings.model_name, created=created)]
-        )
+        return S.ModelList(data=[S.ModelCard(id=settings.model_name, created=created)])
 
     @app.get("/v1/models/{model_id}", response_model=S.ModelCard)
     async def get_model(model_id: str):
@@ -326,13 +325,16 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
     @app.post("/v1/rank", response_model=S.RankResultOut)
     async def rank(payload: S.RankRequest, request: Request):
         active, engine = engines(request)
-        job = Job("rank", (
-            payload.state,
-            payload.candidates,
-            payload.instructions,
-            payload.allow_null,
-            payload.top_k,
-        ))
+        job = Job(
+            "rank",
+            (
+                payload.state,
+                payload.candidates,
+                payload.instructions,
+                payload.allow_null,
+                payload.top_k,
+            ),
+        )
         result = await submit(engine, settings, job)
         return S.RankResultOut.model_validate(result.to_dict())
 
@@ -384,9 +386,7 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
                 id=completion_id,
                 created=stamp,
                 model=settings.model_name,
-                choices=[
-                    S.ChatChoice(message=S.ChatMessageOut(content=content))
-                ],
+                choices=[S.ChatChoice(message=S.ChatMessageOut(content=content))],
                 usage=usage,
             )
 

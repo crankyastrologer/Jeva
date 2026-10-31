@@ -3,10 +3,9 @@ from __future__ import annotations
 import zlib
 
 import torch
-from torch import nn
-
 from jeva import Choice, Jeva, Noul
 from jeva._runtime.config import Config
+from torch import nn
 
 
 class FakeTokenizer:
@@ -75,10 +74,12 @@ def test_state_and_option_cache_reuse():
 def test_batch_deduplicates_options_across_requests():
     jeva, model = make()
     criteria = {"x": "X.", "y": "Y."}
-    responses = jeva.system_one_many([
-        ("first state", {"q": Choice("Pick one.", criteria)}),
-        ("second state", {"q": Choice("Pick one.", criteria)}),
-    ])
+    responses = jeva.system_one_many(
+        [
+            ("first state", {"q": Choice("Pick one.", criteria)}),
+            ("second state", {"q": Choice("Pick one.", criteria)}),
+        ]
+    )
     assert len(responses) == 2
     assert model.state_calls == 2
     assert model.option_calls == 2
@@ -132,10 +133,12 @@ def test_prime_requires_cache():
 
 def test_list_questions_and_many_requests():
     jeva, model = make()
-    responses = jeva.system_one_many([
-        ("state one", [Noul("Q1?"), Choice("Q2?", ["a", "b", "c"])]),
-        ("state two", {"q": Noul("Q3?")}),
-    ])
+    responses = jeva.system_one_many(
+        [
+            ("state one", [Noul("Q1?"), Choice("Q2?", ["a", "b", "c"])]),
+            ("state two", {"q": Noul("Q3?")}),
+        ]
+    )
     assert isinstance(responses[0].answers, list)
     assert isinstance(responses[1].answers, dict)
     assert model.state_calls == 3
