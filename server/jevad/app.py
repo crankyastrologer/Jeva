@@ -1,106 +1,32 @@
 from __future__ import annotations
 
 import asyncio
-import hmac
 import json
 import logging
-import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
-from jeva import Choice, Noul, Score
-from pydantic import ValidationError
+from fastapi.responses import PlainTextResponse, StreamingResponse
 
 from . import schemas as S
 from .config import Settings
+from .converters import build_questions
+from .errors import install_error_handlers
 from .metrics import Metrics
+from .middleware import install_middleware
+from .openai_spec import message_text, openai_usage, parse_decision_spec
 from .runtime import InferenceEngine, QueueFullError
+from .streaming import chunk_text, sse, sse_headers
 
 logger = logging.getLogger("jevad")
-
-STATUS_TYPES = {
-    400: "invalid_request_error",
-    401: "authentication_error",
-    403: "permission_error",
-    404: "not_found_error",
-    409: "conflict_error",
-    422: "invalid_request_error",
-    429: "rate_limit_error",
-    500: "api_error",
-    503: "service_unavailable",
-    504: "timeout_error",
-}
 
 
 @dataclass
 class Job:
     kind: str
     payload: Any = None
-
-
-def error_response(status: int, message: str, code: str | None = None) -> JSONResponse:
-    body = {
-        "error": {
-            "message": message,
-            "type": STATUS_TYPES.get(status, "api_error"),
-            "param": None,
-            "code": code,
-        }
-    }
-    return JSONResponse(status_code=status, content=body)
-
-
-def build_question(spec: S.QuestionSpec):
-    if isinstance(spec, S.NoulSpec):
-        return Noul(instructions=spec.instructions)
-    if isinstance(spec, S.ChoiceSpec):
-        return Choice(
-            instructions=spec.instructions,
-            criteria=spec.criteria,
-            allow_null=spec.allow_null,
-        )
-    if isinstance(spec, S.ScoreSpec):
-        return Score(instructions=spec.instructions, criteria=spec.criteria, values=spec.values)
-    raise ValueError(f"Unsupported question type: {type(spec).__name__}")
-
-
-def build_questions(specs: S.Questions):
-    if isinstance(specs, dict):
-        return {name: build_question(spec) for name, spec in specs.items()}
-    return [build_question(spec) for spec in specs]
-
-
-def strip_fences(text: str) -> str:
-    raw = text.strip()
-    if not raw.startswith("```"):
-        return raw
-    lines = raw.splitlines()[1:]
-    if lines and lines[-1].strip() == "```":
-        lines = lines[:-1]
-    return "\n".join(lines).strip()
-
-
-def parse_decision_spec(text: str) -> S.DecideRequest:
-    try:
-        data = json.loads(strip_fences(text))
-    except json.JSONDecodeError as exc:
-        raise HTTPException(
-            400,
-            "Request content must be a JSON object with 'state' and 'questions': "
-            f"{exc.msg} at line {exc.lineno} column {exc.colno}",
-        ) from exc
-    if not isinstance(data, dict):
-        raise HTTPException(
-            400, "Request content must be a JSON object, not a JSON array or scalar."
-        )
-    try:
-        return S.DecideRequest.model_validate(data)
-    except ValidationError as exc:
-        raise HTTPException(400, f"Invalid decision specification: {exc}") from exc
 
 
 def execute_jobs(model: Any, metrics: Metrics, jobs: list[Job]) -> list[Any]:
@@ -149,24 +75,6 @@ async def submit(engine: InferenceEngine, settings: Settings, job: Job) -> Any:
         raise HTTPException(400, str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(503, str(exc)) from exc
-
-
-def chunk_text(text: str, size: int = 256) -> list[str]:
-    return [text[index : index + size] for index in range(0, len(text), size)]
-
-
-def sse(payload: Any) -> str:
-    if hasattr(payload, "model_dump_json"):
-        return f"data: {payload.model_dump_json()}\n\n"
-    return f"data: {json.dumps(payload)}\n\n"
-
-
-def sse_headers() -> dict[str, str]:
-    return {
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-        "X-Accel-Buffering": "no",
-    }
 
 
 def create_app(settings: Settings | None = None, model: Any | None = None) -> FastAPI:
@@ -222,50 +130,8 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
     app.state.engine = None
     app.state.metrics = Metrics()
     app.state.created = created
-
-    @app.middleware("http")
-    async def instrument(request: Request, call_next):
-        path = request.url.path
-        if settings.api_key and path.startswith("/v1"):
-            header = request.headers.get("authorization", "")
-            if not hmac.compare_digest(header, f"Bearer {settings.api_key}"):
-                return error_response(401, "Invalid or missing API key.", "invalid_api_key")
-        metrics: Metrics = request.app.state.metrics
-        engine: InferenceEngine | None = request.app.state.engine
-        if engine is not None:
-            metrics.set_queue_depth(engine.queue_depth)
-        track = path.startswith("/v1")
-        started = time.perf_counter()
-        status = 500
-        metrics.inc_inflight()
-        try:
-            response = await call_next(request)
-            status = response.status_code
-            return response
-        except Exception:
-            raise
-        finally:
-            metrics.dec_inflight()
-            if track:
-                metrics.observe(path, time.perf_counter() - started)
-                metrics.inc_request(path, str(status))
-
-    @app.exception_handler(RequestValidationError)
-    async def on_validation(request: Request, exc: RequestValidationError):
-        details = "; ".join(
-            f"{'.'.join(str(part) for part in error.get('loc', ()))}: {error.get('msg')}"
-            for error in exc.errors()
-        )
-        return error_response(400, details or "Invalid request.", "invalid_request")
-
-    @app.exception_handler(HTTPException)
-    async def on_http_error(request: Request, exc: HTTPException):
-        return error_response(exc.status_code, str(exc.detail))
-
-    @app.exception_handler(Exception)
-    async def on_unhandled(request: Request, exc: Exception):
-        logger.exception("Unhandled error on %s", request.url.path)
-        return error_response(500, "Internal server error.")
+    install_middleware(app)
+    install_error_handlers(app)
 
     def engines(request: Request) -> tuple[Any, InferenceEngine]:
         engine = request.app.state.engine
@@ -373,11 +239,11 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
         user_messages = [message for message in payload.messages if message.role == "user"]
         if not user_messages:
             raise HTTPException(400, "At least one message with role 'user' is required.")
-        spec = parse_decision_spec(S.message_text(user_messages[-1]))
+        spec = parse_decision_spec(message_text(user_messages[-1]))
         questions = build_questions(spec.questions)
         decision = await submit(engine, settings, Job("decide", (spec.state, questions)))
         content = json.dumps(decision.to_dict(), ensure_ascii=False)
-        usage = S.openai_usage(decision.usage)
+        usage = openai_usage(decision.usage)
         completion_id = S.new_id("chatcmpl")
         stamp = S.now()
 
@@ -442,7 +308,7 @@ def create_app(settings: Settings | None = None, model: Any | None = None) -> Fa
         questions = build_questions(spec.questions)
         decision = await submit(engine, settings, Job("decide", (spec.state, questions)))
         text = json.dumps(decision.to_dict(), ensure_ascii=False)
-        usage = S.openai_usage(decision.usage)
+        usage = openai_usage(decision.usage)
         completion_id = S.new_id("cmpl")
         stamp = S.now()
 

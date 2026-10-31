@@ -283,26 +283,3 @@ def new_id(prefix: str) -> str:
 
 def now() -> int:
     return int(time.time())
-
-
-def openai_usage(usage: Any) -> OpenAIUsage:
-    prompt = int(getattr(usage, "input_tokens", 0) or 0)
-    completion = int(getattr(usage, "output_tokens", 0) or 0)
-    return OpenAIUsage(
-        prompt_tokens=prompt,
-        completion_tokens=completion,
-        total_tokens=prompt + completion,
-    )
-
-
-def message_text(message: ChatMessage) -> str:
-    if isinstance(message.content, str):
-        return message.content
-    if isinstance(message.content, list):
-        parts = [
-            part.get("text", "")
-            for part in message.content
-            if isinstance(part, dict) and part.get("type") in (None, "text")
-        ]
-        return "".join(parts)
-    return ""
