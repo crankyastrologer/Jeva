@@ -191,7 +191,35 @@ Files: `server/jevad/{runtime,metrics,config,schemas,stub}.py`,
   `candidates`).
 * Stub model implements `system_one_many` and records batch sizes, so batching
   can be smoke-tested without weights.
-* Tests grew from 17 to 23 (library batching/caching tests plus engine batching).
+* Tests grew from 17 to 30 (library batching/caching tests, engine batching,
+  priming, and a golden response snapshot for the whole HTTP surface).
+
+### 2.9 Server structure refactor
+
+Files: all of `server/jevad/`, plus `server/tests/` and `server/scripts/`.
+
+Production behavior was frozen first with `tests/golden/responses.json`, then
+the 495-line `app.py` was split without changing a single route:
+
+* leaf modules: `errors`, `middleware`, `converters`, `streaming`, `openai_spec`;
+* `routes/` package with one router per surface (health, models, decisions,
+  cache, OpenAI);
+* `execution.py` with a `JobKind` enum, a dispatch table, and a `ModelAdapter`
+  that centralizes the optional-API fallbacks (`system_one_many`, `prime`);
+* `lifecycle.py` for model loading and engine startup/shutdown;
+* `deps.py` for typed FastAPI dependencies instead of ad-hoc `request.app.state`
+  access in every handler;
+* `schemas/` package split by domain with re-exports, so imports and OpenAPI are
+  unchanged;
+* OpenAI chat/completion response and SSE assembly moved to
+  `openai_responses.py`, removing the duplicated streaming blocks;
+* performance scripts moved from `tests/` to `scripts/`;
+* `pyproject.toml` with ruff (lint + format, line length 100) and pytest config;
+* `ARCHITECTURE.md` documents the module map, request lifecycle and how to add a
+  route.
+
+Result: `app.py` is 45 lines, no module exceeds ~140 lines, `ruff check` is
+clean, and the golden snapshot plus 30 tests pass at every step.
 
 ---
 
@@ -311,7 +339,7 @@ one `DecisionResponse` per input. `Jeva.cache_info()` now includes `states`.
   dedupe, per-question state rows, `cache="none"` behavior, named/list questions,
   prime-then-decide reuse across changed instructions.
 
-Result: **28 passed**. Performance scripts (not part of CI):
+Result: **30 passed**. Performance scripts (not part of CI):
 
 * `bench_real.py`, `bench_shapes.py`, `bench_ab.py` — in-process measurements.
 * `bench_prime.py` — cold vs primed vs `cache="none"`, and instruction changes.

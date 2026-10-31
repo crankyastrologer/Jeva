@@ -206,9 +206,23 @@ docker run --gpus all -p 8000:8000 \
 - `JEVA_COMPILE` is off by default: compiling the small decision stack measured
   slower than eager on this GPU (see `OPTIMIZATION.md`).
 
-## Tests
+## Tests and linting
 
 ```bash
 cd server
 ../.venv/bin/python -m pytest
+../.venv/bin/ruff check jevad tests scripts
+../.venv/bin/ruff format jevad tests scripts
 ```
+
+The suite covers unit behavior, the HTTP API, a golden response snapshot of
+every route, and engine batching. Performance scripts live in `scripts/` and are
+not collected by pytest.
+
+## Layout
+
+`ARCHITECTURE.md` is the module map and request lifecycle. In short:
+`app.py` only wires the app, `routes/` owns HTTP, `execution.py` owns jobs,
+`runtime.py` owns the queue, `lifecycle.py` owns model startup, and `schemas/`
+holds the Pydantic models.
+

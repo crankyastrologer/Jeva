@@ -60,9 +60,7 @@ def chat_stream(
     return events()
 
 
-def text_response(
-    content: str, usage: S.OpenAIUsage, model_name: str
-) -> S.TextCompletionResponse:
+def text_response(content: str, usage: S.OpenAIUsage, model_name: str) -> S.TextCompletionResponse:
     return S.TextCompletionResponse(
         id=S.new_id("cmpl"),
         created=S.now(),
