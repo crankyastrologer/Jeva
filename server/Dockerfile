@@ -12,7 +12,7 @@ COPY requirements.txt ./requirements-repo.txt
 RUN pip install --upgrade pip && pip install -r requirements-repo.txt
 
 COPY server ./server
-RUN pip install -r server/requirements.txt
+RUN pip install ./server
 
 ENV JEVA_MODEL=/models/Jeva-4B \
     JEVA_HOST=0.0.0.0 \

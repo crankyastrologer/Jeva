@@ -30,9 +30,9 @@ Requests to `/v1/*` require `Authorization: Bearer $JEVA_API_KEY` when
 ```bash
 cd ~/Jeva
 source .venv/bin/activate
-pip install -r server/requirements.txt
+pip install -e "server[dev]"   # after the library env from the root README
 export JEVA_MODEL=./models/Jeva-4B
-uvicorn jevad.app:app --app-dir server --host 0.0.0.0 --port 8000
+uvicorn jevad.app:app --host 0.0.0.0 --port 8000
 ```
 
 On an 8 GB GPU use NF4 quantization and smaller option batches:
@@ -40,13 +40,13 @@ On an 8 GB GPU use NF4 quantization and smaller option batches:
 ```bash
 JEVA_MODEL=./models/Jeva-4B JEVA_QUANTIZE=4bit \
 JEVA_OPTION_CHUNK_SIZE=4 JEVA_OPTION_BATCH_TOKENS=4096 \
-uvicorn jevad.app:app --app-dir server --port 8000
+uvicorn jevad.app:app --port 8000
 ```
 
 No weights yet? Run the stub (fixed fake scores, no GPU):
 
 ```bash
-uvicorn jevad.stub:app --app-dir server --port 8000
+uvicorn jevad.stub:app --port 8000
 ```
 
 ## Decision spec

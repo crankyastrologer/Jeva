@@ -24,6 +24,25 @@ README covers usage, and `OPTIMIZATION.md` covers the performance work.
 | `jevad/routes/` | HTTP surface only; no model calls beyond `submit()` |
 | `jevad/schemas/` | Pydantic request/response models split by domain, re-exported from `__init__` |
 
+## Packaging
+
+Two distributions with a one-way dependency:
+
+* the repository root builds `jeva-model` (the library and its CLI);
+* `server/pyproject.toml` builds `jevad` and depends on `jeva-model` being
+  installed first, because the library is not published on PyPI.
+
+Install order is therefore library, then server:
+
+```bash
+pip install -r requirements.txt      # from the repo root, installs jeva-model
+pip install -e "server[dev]"         # jevad plus test/lint extras
+```
+
+`server/pyproject.toml` is the single source of truth for server dependencies;
+there are no `server/requirements*.txt` files. The Dockerfile installs the
+library, then `pip install ./server`.
+
 ## Request lifecycle
 
 ```
