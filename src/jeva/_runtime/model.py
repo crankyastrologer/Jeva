@@ -8,12 +8,12 @@ from .matrix_decision import MatrixDecisionStack
 
 
 class System1DecisionModel(nn.Module):
-    def __init__(self, model_cfg):
+    def __init__(self, model_cfg, *, quantize=None, device=None):
         super().__init__()
         self.model_cfg = model_cfg
         if model_cfg.decision_arch != "matrix_stack":
             raise ValueError("Jeva requires decision_arch=matrix_stack")
-        self.backbone = TextBackbone(model_cfg)
+        self.backbone = TextBackbone(model_cfg, quantize=quantize, device=device)
         d = int(model_cfg.projection_dim)
         self.context_proj = nn.Linear(self.backbone.hidden_size, d, bias=False)
         self.option_proj = nn.Linear(self.backbone.hidden_size, d, bias=False)
@@ -28,6 +28,10 @@ class System1DecisionModel(nn.Module):
             normalize_initial_state=model_cfg.normalize_state,
             final_norm=model_cfg.decision_final_norm,
         )
+        if device is not None:
+            self.context_proj.to(device)
+            self.option_proj.to(device)
+            self.core.to(device)
         if model_cfg.head_path:
             self.load_head(model_cfg.head_path)
 

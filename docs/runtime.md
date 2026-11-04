@@ -42,6 +42,62 @@ an arbitrary existing Torch environment. `requirements-core.txt` omits the
 optional compiled kernels and is a useful correctness fallback, but will not
 reproduce accelerated timings. No latency guarantee applies to all GPUs.
 
+## Quantization, batching, and cache control
+
+The 4B backbone does not fit in 8 GiB of VRAM in bf16. Install the optional
+quantizer and load the checkpoint in NF4:
+
+```bash
+pip install -e ".[quantize]"
+```
+
+```python
+from jeva import Jeva
+
+model = Jeva.from_pretrained("./models/Jeva-4B", device="cuda", quantize="4bit")
+```
+
+`quantize` accepts `"4bit"` or `"8bit"`, requires `device="cuda"`, and quantizes
+only the backbone. The decision head stays in full precision, and the LoRA
+adapter is applied at runtime instead of being merged (merging into a quantized
+base is unsupported). In practice the 8.8 GB checkpoint loads in 3.6 GiB and
+peaks near 4 GiB while encoding.
+
+Encoding is batched. `system_one` encodes every question state in one forward
+pass, and `system_one_many` batches across requests:
+
+```python
+responses = model.system_one_many([
+    ("first state", questions_a),
+    ("second state", questions_b),
+])
+```
+
+Batch bounds are controlled by `state_chunk_size` / `state_batch_tokens` and
+`option_chunk_size` / `option_batch_tokens`. The limits bound padded tokens per
+sub-batch; a single text longer than the budget still runs as one row.
+
+Three caches are exposed:
+
+- `state` — pooled state encodings, keyed by token ids, bounded by
+  `state_cache_size` and `state_cache_max_bytes`;
+- `options` — per-option projected keys/values, reused across questions;
+- `sets` — assembled option memories for an ordered candidate set.
+
+`cache_info()` reports all three and `clear_cache()` clears them. Because the
+option prompt contains only the option text and decision type, primed options
+remain valid when instructions change:
+
+```python
+from jeva import Choice, Jeva
+
+model.prime_options(["duplicate charge", "cancel order"], kind="choice")
+model.prime({"team": Choice("Route this ticket.", {"billing": "...", "engineering": "..."})})
+```
+
+`compile_core=True` wraps the decision stack in `torch.compile`. It is off by
+default; on small GPUs the guard overhead measured slower than eager execution.
+
 ## GPU memory and batching
 
 The default uses BF16 model weights and limits option encoding to 16 rows and

@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 train = ["datasets>=4,<5"]
+quantize = ["bitsandbytes>=0.48"]
 
 [project.scripts]
 jeva-doctor = "jeva.doctor:main"
@@ -28,3 +29,7 @@ jeva-evaluate = "jeva.evaluation:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
