@@ -1,0 +1,30 @@
+[
+  {
+    "mode": "decide3",
+    "concurrency": 4,
+    "duration_s": 90.01,
+    "requests": 728,
+    "success": 728,
+    "statuses": {
+      "200": 728
+    },
+    "throughput_rps": 8.09,
+    "latency_ms": {
+      "mean": 494.5,
+      "p50": 496.6,
+      "p90": 511.4,
+      "p95": 517.0,
+      "p99": 549.3,
+      "max": 651.6
+    },
+    "server_latency_ms": {
+      "p50": 479.0,
+      "p95": 498.4
+    },
+    "tokens": {
+      "state": 118465,
+      "options": 0,
+      "cached": 56056
+    }
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "mode": "noul",
+    "concurrency": 4,
+    "duration_s": 12.35,
+    "requests": 110,
+    "success": 110,
+    "statuses": {
+      "200": 110
+    },
+    "throughput_rps": 8.91,
+    "latency_ms": {
+      "mean": 442.8,
+      "p50": 443.2,
+      "p90": 469.9,
+      "p95": 488.2,
+      "p99": 530.4,
+      "max": 538.2
+    },
+    "server_latency_ms": {
+      "p50": 108.4,
+      "p95": 121.9
+    },
+    "tokens": {
+      "state": 5831,
+      "options": 0,
+      "cached": 1320
+    }
+  },
+  {
+    "mode": "noul",
+    "concurrency": 8,
+    "duration_s": 12.79,
+    "requests": 119,
+    "success": 119,
+    "statuses": {
+      "200": 119
+    },
+    "throughput_rps": 9.3,
+    "latency_ms": {
+      "mean": 834.6,
+      "p50": 856.2,
+      "p90": 875.0,
+      "p95": 877.2,
+      "p99": 882.8,
+      "max": 885.0
+    },
+    "server_latency_ms": {
+      "p50": 104.1,
+      "p95": 114.7
+    },
+    "tokens": {
+      "state": 6285,
+      "options": 0,
+      "cached": 1428
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 4,
+    "duration_s": 12.52,
+    "requests": 79,
+    "success": 79,
+    "statuses": {
+      "200": 79
+    },
+    "throughput_rps": 6.31,
+    "latency_ms": {
+      "mean": 621.7,
+      "p50": 632.1,
+      "p90": 638.4,
+      "p95": 641.6,
+      "p99": 655.9,
+      "max": 659.9
+    },
+    "server_latency_ms": {
+      "p50": 154.3,
+      "p95": 157.9
+    },
+    "tokens": {
+      "state": 12626,
+      "options": 0,
+      "cached": 6083
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 8,
+    "duration_s": 13.14,
+    "requests": 81,
+    "success": 81,
+    "statuses": {
+      "200": 81
+    },
+    "throughput_rps": 6.17,
+    "latency_ms": {
+      "mean": 1242.5,
+      "p50": 1280.8,
+      "p90": 1367.5,
+      "p95": 1396.3,
+      "p99": 1440.0,
+      "max": 1446.4
+    },
+    "server_latency_ms": {
+      "p50": 156.8,
+      "p95": 167.7
+    },
+    "tokens": {
+      "state": 12969,
+      "options": 0,
+      "cached": 6237
+    }
+  }
+]

@@ -1,0 +1,250 @@
+{
+  "option_scaling": [
+    {
+      "status": 200,
+      "salt": "f0c5ae",
+      "samples_ms": [
+        536.4,
+        121.3,
+        114.1
+      ],
+      "median_ms": 121.3,
+      "first_usage": {
+        "input_tokens": 164,
+        "requested_input_tokens": 164,
+        "encoded_state_tokens": 32,
+        "encoded_option_tokens": 132,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 4,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "05f648",
+      "samples_ms": [
+        758.0,
+        124.1,
+        124.2
+      ],
+      "median_ms": 124.2,
+      "first_usage": {
+        "input_tokens": 612,
+        "requested_input_tokens": 612,
+        "encoded_state_tokens": 34,
+        "encoded_option_tokens": 578,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 16,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "6f3ad2",
+      "samples_ms": [
+        2686.9,
+        137.7,
+        124.2
+      ],
+      "median_ms": 137.7,
+      "first_usage": {
+        "input_tokens": 2371,
+        "requested_input_tokens": 2371,
+        "encoded_state_tokens": 33,
+        "encoded_option_tokens": 2338,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 64,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "b1e0e5",
+      "samples_ms": [
+        9971.4,
+        125.8,
+        147.7
+      ],
+      "median_ms": 147.7,
+      "first_usage": {
+        "input_tokens": 9943,
+        "requested_input_tokens": 9943,
+        "encoded_state_tokens": 33,
+        "encoded_option_tokens": 9910,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 256,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "f62538",
+      "samples_ms": [
+        40265.9,
+        140.1,
+        164.1
+      ],
+      "median_ms": 164.1,
+      "first_usage": {
+        "input_tokens": 40735,
+        "requested_input_tokens": 40735,
+        "encoded_state_tokens": 33,
+        "encoded_option_tokens": 40702,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 1024,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "760419",
+      "samples_ms": [
+        82782.0,
+        163.5,
+        150.0
+      ],
+      "median_ms": 163.5,
+      "first_usage": {
+        "input_tokens": 86816,
+        "requested_input_tokens": 86816,
+        "encoded_state_tokens": 34,
+        "encoded_option_tokens": 86782,
+        "cached_option_tokens": 0,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "options": 2048,
+      "peak_vram_mib": 5945
+    }
+  ],
+  "state_scaling": [
+    {
+      "status": 200,
+      "salt": "a49c6e",
+      "samples_ms": [
+        141.5,
+        118.6,
+        115.5
+      ],
+      "median_ms": 118.6,
+      "first_usage": {
+        "input_tokens": 93,
+        "requested_input_tokens": 105,
+        "encoded_state_tokens": 93,
+        "encoded_option_tokens": 0,
+        "cached_option_tokens": 12,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "repeats": 5,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "528940",
+      "samples_ms": [
+        432.1,
+        430.2,
+        444.9
+      ],
+      "median_ms": 432.1,
+      "first_usage": {
+        "input_tokens": 679,
+        "requested_input_tokens": 691,
+        "encoded_state_tokens": 679,
+        "encoded_option_tokens": 0,
+        "cached_option_tokens": 12,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "repeats": 50,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "932167",
+      "samples_ms": [
+        1607.6,
+        1615.2,
+        1617.3
+      ],
+      "median_ms": 1615.2,
+      "first_usage": {
+        "input_tokens": 2629,
+        "requested_input_tokens": 2641,
+        "encoded_state_tokens": 2629,
+        "encoded_option_tokens": 0,
+        "cached_option_tokens": 12,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "repeats": 200,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 200,
+      "salt": "d13930",
+      "samples_ms": [
+        4495.2,
+        4437.7,
+        4484.5
+      ],
+      "median_ms": 4484.5,
+      "first_usage": {
+        "input_tokens": 7828,
+        "requested_input_tokens": 7840,
+        "encoded_state_tokens": 7828,
+        "encoded_option_tokens": 0,
+        "cached_option_tokens": 12,
+        "output_tokens": 0,
+        "truncated_tokens": 0
+      },
+      "repeats": 600,
+      "peak_vram_mib": 5945
+    },
+    {
+      "status": 400,
+      "body": "{\"error\":{\"message\":\"state[0] has 9127 tokens; limit is 9000. Shorten the input, increase the configured limit, or explicitly set truncation='truncate'.\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":null}}",
+      "salt": "ea26c9",
+      "repeats": 700,
+      "peak_vram_mib": 5945
+    }
+  ],
+  "cache": {
+    "mode": "hybrid",
+    "options": {
+      "entries": 4096,
+      "bytes": 37748736,
+      "hits": 15796,
+      "misses": 4452,
+      "max_entries": 4096,
+      "max_bytes": 268435456
+    },
+    "sets": {
+      "entries": 15,
+      "bytes": 44167864,
+      "hits": 3041,
+      "misses": 15,
+      "max_entries": 64,
+      "max_bytes": 268435456
+    },
+    "states": {
+      "entries": 2048,
+      "bytes": 6291456,
+      "hits": 22,
+      "misses": 3034,
+      "max_entries": 2048,
+      "max_bytes": 134217728
+    }
+  }
+}

@@ -206,6 +206,13 @@ docker run --gpus all -p 8000:8000 \
 - `JEVA_COMPILE` is off by default: compiling the small decision stack measured
   slower than eager on this GPU (see `OPTIMIZATION.md`).
 
+## Benchmarks
+
+[`BENCHMARKS.md`](BENCHMARKS.md) has measured latency, throughput, batching A/B,
+queue/timeout behaviour, option and state scaling, and GPU utilization for the
+RTX 4060 development machine. Raw results are in `scripts/results/`, produced by
+`scripts/loadtest.py` and `scripts/limits.py`.
+
 ## Tests and linting
 
 ```bash
@@ -216,8 +223,8 @@ cd server
 ```
 
 The suite covers unit behavior, the HTTP API, a golden response snapshot of
-every route, and engine batching. Performance scripts live in `scripts/` and are
-not collected by pytest.
+every route, and engine batching. Performance scripts (`loadtest.py`,
+`limits.py`) live in `scripts/` and are not collected by pytest.
 
 ## Layout
 

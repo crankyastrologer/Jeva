@@ -341,6 +341,8 @@ one `DecisionResponse` per input. `Jeva.cache_info()` now includes `states`.
 
 Result: **30 passed**. Performance scripts (not part of CI):
 
+* `loadtest.py` — closed-loop concurrency sweep (latency percentiles, throughput).
+* `limits.py` — option/state scaling, cache behaviour, VRAM sampling.
 * `bench_real.py`, `bench_shapes.py`, `bench_ab.py` — in-process measurements.
 * `bench_prime.py` — cold vs primed vs `cache="none"`, and instruction changes.
 * `check_prime_http.py` — primes over HTTP, then verifies `encoded_option_tokens

@@ -1,0 +1,422 @@
+[
+  {
+    "mode": "noul",
+    "concurrency": 1,
+    "duration_s": 12.01,
+    "requests": 93,
+    "success": 93,
+    "statuses": {
+      "200": 93
+    },
+    "throughput_rps": 7.75,
+    "latency_ms": {
+      "mean": 129.1,
+      "p50": 121.7,
+      "p90": 158.0,
+      "p95": 165.7,
+      "p99": 201.0,
+      "max": 295.5
+    },
+    "server_latency_ms": {
+      "p50": 111.8,
+      "p95": 155.1
+    },
+    "tokens": {
+      "state": 4905,
+      "options": 0,
+      "cached": 1116
+    }
+  },
+  {
+    "mode": "noul",
+    "concurrency": 2,
+    "duration_s": 12.05,
+    "requests": 192,
+    "success": 192,
+    "statuses": {
+      "200": 192
+    },
+    "throughput_rps": 15.94,
+    "latency_ms": {
+      "mean": 125.5,
+      "p50": 121.6,
+      "p90": 140.7,
+      "p95": 144.3,
+      "p99": 157.2,
+      "max": 159.7
+    },
+    "server_latency_ms": {
+      "p50": 111.4,
+      "p95": 134.3
+    },
+    "tokens": {
+      "state": 10222,
+      "options": 0,
+      "cached": 2304
+    }
+  },
+  {
+    "mode": "noul",
+    "concurrency": 4,
+    "duration_s": 12.13,
+    "requests": 256,
+    "success": 256,
+    "statuses": {
+      "200": 256
+    },
+    "throughput_rps": 21.1,
+    "latency_ms": {
+      "mean": 189.5,
+      "p50": 189.8,
+      "p90": 194.3,
+      "p95": 197.2,
+      "p99": 199.0,
+      "max": 199.8
+    },
+    "server_latency_ms": {
+      "p50": 175.4,
+      "p95": 181.3
+    },
+    "tokens": {
+      "state": 13655,
+      "options": 0,
+      "cached": 3072
+    }
+  },
+  {
+    "mode": "noul",
+    "concurrency": 8,
+    "duration_s": 12.35,
+    "requests": 249,
+    "success": 249,
+    "statuses": {
+      "200": 249
+    },
+    "throughput_rps": 20.17,
+    "latency_ms": {
+      "mean": 393.4,
+      "p50": 324.7,
+      "p90": 423.2,
+      "p95": 1031.6,
+      "p99": 1226.3,
+      "max": 1304.6
+    },
+    "server_latency_ms": {
+      "p50": 293.2,
+      "p95": 309.8
+    },
+    "tokens": {
+      "state": 13291,
+      "options": 0,
+      "cached": 2988
+    }
+  },
+  {
+    "mode": "noul",
+    "concurrency": 16,
+    "duration_s": 12.51,
+    "requests": 304,
+    "success": 304,
+    "statuses": {
+      "200": 304
+    },
+    "throughput_rps": 24.29,
+    "latency_ms": {
+      "mean": 650.2,
+      "p50": 634.9,
+      "p90": 720.6,
+      "p95": 904.5,
+      "p99": 993.9,
+      "max": 996.8
+    },
+    "server_latency_ms": {
+      "p50": 310.0,
+      "p95": 367.1
+    },
+    "tokens": {
+      "state": 16219,
+      "options": 0,
+      "cached": 3648
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 1,
+    "duration_s": 12.15,
+    "requests": 73,
+    "success": 73,
+    "statuses": {
+      "200": 73
+    },
+    "throughput_rps": 6.01,
+    "latency_ms": {
+      "mean": 166.4,
+      "p50": 166.0,
+      "p90": 171.3,
+      "p95": 176.2,
+      "p99": 186.6,
+      "max": 202.3
+    },
+    "server_latency_ms": {
+      "p50": 156.2,
+      "p95": 165.8
+    },
+    "tokens": {
+      "state": 11666,
+      "options": 0,
+      "cached": 5621
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 2,
+    "duration_s": 12.24,
+    "requests": 98,
+    "success": 98,
+    "statuses": {
+      "200": 98
+    },
+    "throughput_rps": 8.01,
+    "latency_ms": {
+      "mean": 249.7,
+      "p50": 249.0,
+      "p90": 254.5,
+      "p95": 255.9,
+      "p99": 261.9,
+      "max": 262.0
+    },
+    "server_latency_ms": {
+      "p50": 236.1,
+      "p95": 242.8
+    },
+    "tokens": {
+      "state": 15688,
+      "options": 0,
+      "cached": 7546
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 4,
+    "duration_s": 12.2,
+    "requests": 100,
+    "success": 100,
+    "statuses": {
+      "200": 100
+    },
+    "throughput_rps": 8.2,
+    "latency_ms": {
+      "mean": 488.0,
+      "p50": 488.4,
+      "p90": 492.8,
+      "p95": 493.7,
+      "p99": 498.4,
+      "max": 499.3
+    },
+    "server_latency_ms": {
+      "p50": 470.1,
+      "p95": 475.8
+    },
+    "tokens": {
+      "state": 16046,
+      "options": 0,
+      "cached": 7700
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 8,
+    "duration_s": 12.44,
+    "requests": 107,
+    "success": 107,
+    "statuses": {
+      "200": 107
+    },
+    "throughput_rps": 8.6,
+    "latency_ms": {
+      "mean": 910.3,
+      "p50": 904.7,
+      "p90": 1133.2,
+      "p95": 1148.8,
+      "p99": 1156.8,
+      "max": 1159.3
+    },
+    "server_latency_ms": {
+      "p50": 875.8,
+      "p95": 893.4
+    },
+    "tokens": {
+      "state": 17155,
+      "options": 0,
+      "cached": 8239
+    }
+  },
+  {
+    "mode": "decide3",
+    "concurrency": 16,
+    "duration_s": 13.35,
+    "requests": 96,
+    "success": 96,
+    "statuses": {
+      "200": 96
+    },
+    "throughput_rps": 7.19,
+    "latency_ms": {
+      "mean": 2146.3,
+      "p50": 1839.6,
+      "p90": 3200.9,
+      "p95": 4095.8,
+      "p99": 4096.6,
+      "max": 4097.3
+    },
+    "server_latency_ms": {
+      "p50": 892.7,
+      "p95": 1104.7
+    },
+    "tokens": {
+      "state": 15339,
+      "options": 0,
+      "cached": 7392
+    }
+  },
+  {
+    "mode": "rank8",
+    "concurrency": 1,
+    "duration_s": 12.1,
+    "requests": 88,
+    "success": 88,
+    "statuses": {
+      "200": 88
+    },
+    "throughput_rps": 7.27,
+    "latency_ms": {
+      "mean": 137.4,
+      "p50": 127.0,
+      "p90": 171.7,
+      "p95": 198.7,
+      "p99": 243.6,
+      "max": 436.2
+    },
+    "server_latency_ms": {
+      "p50": 117.6,
+      "p95": 188.0
+    },
+    "tokens": {
+      "state": 4737,
+      "options": 184,
+      "cached": 16008
+    }
+  },
+  {
+    "mode": "rank8",
+    "concurrency": 2,
+    "duration_s": 12.22,
+    "requests": 98,
+    "success": 98,
+    "statuses": {
+      "200": 98
+    },
+    "throughput_rps": 8.02,
+    "latency_ms": {
+      "mean": 249.4,
+      "p50": 239.4,
+      "p90": 287.4,
+      "p95": 323.1,
+      "p99": 356.2,
+      "max": 356.3
+    },
+    "server_latency_ms": {
+      "p50": 111.2,
+      "p95": 147.6
+    },
+    "tokens": {
+      "state": 5258,
+      "options": 0,
+      "cached": 18032
+    }
+  },
+  {
+    "mode": "rank8",
+    "concurrency": 4,
+    "duration_s": 12.49,
+    "requests": 92,
+    "success": 92,
+    "statuses": {
+      "200": 92
+    },
+    "throughput_rps": 7.37,
+    "latency_ms": {
+      "mean": 542.8,
+      "p50": 536.3,
+      "p90": 583.0,
+      "p95": 587.9,
+      "p99": 591.3,
+      "max": 592.0
+    },
+    "server_latency_ms": {
+      "p50": 128.2,
+      "p95": 147.8
+    },
+    "tokens": {
+      "state": 4943,
+      "options": 0,
+      "cached": 16928
+    }
+  },
+  {
+    "mode": "rank8",
+    "concurrency": 8,
+    "duration_s": 12.57,
+    "requests": 94,
+    "success": 94,
+    "statuses": {
+      "200": 94
+    },
+    "throughput_rps": 7.48,
+    "latency_ms": {
+      "mean": 1069.2,
+      "p50": 1064.6,
+      "p90": 1315.4,
+      "p95": 1381.2,
+      "p99": 1499.8,
+      "max": 1502.6
+    },
+    "server_latency_ms": {
+      "p50": 127.9,
+      "p95": 145.7
+    },
+    "tokens": {
+      "state": 5055,
+      "options": 0,
+      "cached": 17296
+    }
+  },
+  {
+    "mode": "rank8",
+    "concurrency": 16,
+    "duration_s": 13.51,
+    "requests": 96,
+    "success": 96,
+    "statuses": {
+      "200": 96
+    },
+    "throughput_rps": 7.11,
+    "latency_ms": {
+      "mean": 2166.8,
+      "p50": 2197.5,
+      "p90": 2414.2,
+      "p95": 2440.6,
+      "p99": 2443.9,
+      "max": 2446.7
+    },
+    "server_latency_ms": {
+      "p50": 134.9,
+      "p95": 168.7
+    },
+    "tokens": {
+      "state": 5140,
+      "options": 0,
+      "cached": 17664
+    }
+  }
+]

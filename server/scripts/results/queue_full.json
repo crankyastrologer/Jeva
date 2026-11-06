@@ -1,0 +1,31 @@
+[
+  {
+    "mode": "noul",
+    "concurrency": 8,
+    "duration_s": 5.36,
+    "requests": 3499,
+    "success": 9,
+    "statuses": {
+      "429": 3490,
+      "200": 9
+    },
+    "throughput_rps": 1.68,
+    "latency_ms": {
+      "mean": 11.6,
+      "p50": 7.2,
+      "p90": 9.0,
+      "p95": 9.5,
+      "p99": 11.0,
+      "max": 2373.8
+    },
+    "server_latency_ms": {
+      "p50": 683.3,
+      "p95": 818.6
+    },
+    "tokens": {
+      "state": 485,
+      "options": 0,
+      "cached": 108
+    }
+  }
+]
