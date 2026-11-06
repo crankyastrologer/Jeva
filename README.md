@@ -14,6 +14,123 @@ National University of Singapore
 
 <p align="center"><a href="site/assets/figure1.pdf"><img src="site/assets/figure1.png" width="1000" alt="Jeva architecture and four structural properties: null awareness, permutation invariance, option scalability, and reusable option memory"></a></p>
 
+> **Fork notice.** This is a fork of [LiQiiiii/Jeva](https://github.com/LiQiiiii/Jeva).
+> The Jeva model and paper are by Qi Li and Xinchao Wang (NUS).
+>
+> This fork adds **jevad**, an OpenAI-compatible inference server under
+> [`server/`](server/README.md), plus optional 4-bit/8-bit quantization, batched
+> scoring, state/option/set caching, and cache priming in `src/jeva/`. The
+> measured 4-bit footprint is 3.6 GiB on an 8 GB GPU.
+>
+> Start with [`server/README.md`](server/README.md),
+> [`server/ARCHITECTURE.md`](server/ARCHITECTURE.md), and
+> [`server/OPTIMIZATION.md`](server/OPTIMIZATION.md).
+
+## Why I think System One models matter
+
+Hi everyone. System One models are one of the most recent innovations in AI. After working in a lot of settings, from startups to big corporations, I keep noticing the same thing: most AI use cases don't actually need free flowing, stochastic text. They need reproducible, predictable decisions from a narrow set of choices.
+
+When you handle millions of decisions a day, you can't just rely on an AI generating text and extracting a decision out of it. The main asset is the intelligence, not the language generation.
+
+First there was structured output. We got LLMs to generate verifiable JSON, and then extracted the decision from it. It works, but it has its own problems. One of the big ones is token inefficiency. JSON itself is token heavy. You are paying the LLM to write out the decision word by word instead of just pointing to the correct option.
+
+Here come System One models. Instead of generating text like a normal LLM, they only output a decision. You give the model a state (the information it has to decide about) and a question (what decision it has to make), along with typed options, and it returns the choice it thinks fits best, or a probability per option, a truth probability, or an expected rubric score. No generated text, no JSON, no parsing step.
+
+### The trade-off
+
+Now, this approach has advantages and disadvantages. With a normal LLM, each token it outputs can actually change its answer about something. The model doesn't choose an answer up front and then write it out; it is assessing and answering as it writes. That iterative process is where a lot of its intelligence comes from. A System One model has to get it right in one shot, in a single forward pass. So you lose some of that intelligence, and that is why these models are not that suited for applications like mathematics and complex coding. But where they excel is making easy decisions from a set of choices, fast and cheap, and a lot of enterprise functions rely on exactly that. For eg, you want to understand what a user chat is about before redirecting them to an agent, or you want to understand if a text contains PII before it goes through the main LLM. These are System One problems.
+
+### Why serving looks different
+
+Now let's talk about latency, because that is where these models get interesting. In usual LLM decode, you prefill all the input tokens, and then the LLM outputs token by token. For each token it computes attention with the older ones and generates a new one, until the output is complete. That loop is mostly a memory bandwidth bottleneck, and there are ways to alleviate it a little, like speculative decoding or multi token output.
+
+A System One request has no decode loop. It is prefill only, so there is no KV cache to page and nothing for speculative decoding to accelerate. Continuous batching, in the strict sense of adding new requests into a running token stream, does not really exist here. Batching still matters, but at the request level: many independent texts can share one forward pass. You batch rows, you bound padded tokens, and you cache aggressively.
+
+### Why Jeva is a good fit for this
+
+Jeva in particular is special. From an inference perspective, one of the main advantages of its design is that it computes the state and question in one prompt, and options separately, until the final calculation. They never share a sequence inside the encoder. The interaction happens later, in a small 13M parameter set attention head that produces candidate probabilities and a separate coverage estimate for "is the answer even present here?"
+
+This lets us cache the pieces separately. Options survive question changes. Changing the question means re-encoding the combined state and question prompt, because they are the same forward pass. Priming a candidate bank once takes it off the critical path. Exact repeats become a head call plus cache lookups. Because the no decode path is cheap, we can also afford things a token server cannot: keep option memory in CPU RAM or on disk and pay a few milliseconds to fetch it, or share a bank across replicas. Pushing hidden vectors to an offsite cache is possible too, but it brings privacy and consistency questions. I think of it as a direction, not a default.
+
+### Jeva as a judge
+
+This is the part I am most excited about. A lot of "LLM as a judge" work is really evaluation work: rank two answers, score a response against a rubric, check whether a claim is supported by the context. Jeva fits that shape really well.
+
+It scores a fixed set of candidates, so position bias is not an issue. Reordering the options permutes the probabilities instead of changing them. It gives an explicit coverage or null probability, so you can say "none of these options fit, escalate" instead of picking the least bad one. And it is cheap enough to run on every request, not just in offline evals.
+
+For hallucination detection specifically, you can give it a claim and the retrieved evidence and ask a Noul question: is this claim supported by this evidence? Coverage lets you separate "the model is wrong" from "the evidence does not answer this". At high volume, that is a much better fit than asking a large model to write out a verdict.
+
+But there is one real limitation, and it is the thing that holds these models back for evaluations: you cannot ask Jeva to explain itself. You get a probability or a label, not a chain of thought. There is no reasoning trace to inspect, no "here is why I chose B". If the model gets a judgement wrong, you are blind to the thought process that led there. You can debug around it by changing the options, adding more context, or checking that the question is well posed, and you can calibrate it on labelled data, but you cannot read its reasoning. For regulated workflows or anything that needs an auditable rationale, that is a serious constraint.
+
+### What a serving stack for this class needs
+
+1. A way to prime (pre-encode) state/question prompts, individual options, or whole option sets.
+2. Stable cache keys so a decision can address those pieces independently.
+3. Tiered storage for that memory: GPU, CPU, disk, and eventually remote.
+4. An API that accepts flexible input: vary the state while holding the question and options fixed, or swap candidates while holding the state fixed.
+
+This repository is my attempt at that stack. It is not a vLLM replacement. It is a small, typed decision server built around those four ideas.
+
+## What this fork adds
+
+- `server/` is **jevad**, an OpenAI-compatible inference server with `/v1/decide`, `/v1/rank`, `/v1/chat/completions`, `/v1/completions`, cache priming, SSE streaming, Bearer auth, Prometheus metrics, and a Dockerfile.
+- Optional 4-bit/8-bit loading (`bitsandbytes`) for GPUs that cannot hold the 8.8 GB backbone. Measured on an RTX 4060 Laptop: 3.6 GiB at 4-bit.
+- Batched state encoding, request-level micro-batching, a state-encoding cache, and instruction-independent option memory.
+- An engineering log with every benchmark and dead end: [`server/OPTIMIZATION.md`](server/OPTIMIZATION.md).
+
+### Quick start
+
+```bash
+# library (see Installation below for the full environment)
+python -m pip install -r requirements.txt
+jeva-download LIQIIIII/Jeva-4B --local-dir ./models/Jeva-4B
+
+# server
+pip install -e "server[dev]"
+JEVA_MODEL=./models/Jeva-4B JEVA_QUANTIZE=4bit \
+JEVA_OPTION_CHUNK_SIZE=4 JEVA_OPTION_BATCH_TOKENS=4096 \
+uvicorn jevad.app:app --port 8000
+```
+
+Then open `http://localhost:8000/docs`, or prime a candidate bank:
+
+```bash
+curl -s localhost:8000/v1/cache/prime -H 'Content-Type: application/json' \
+  -d '{"candidates": {"refund": "Duplicate charges.", "delivery": "Shipment tracking."}}'
+```
+
+- Server guide: [`server/README.md`](server/README.md)
+- Architecture: [`server/ARCHITECTURE.md`](server/ARCHITECTURE.md)
+- Benchmarks and rationale: [`server/OPTIMIZATION.md`](server/OPTIMIZATION.md)
+
+## Choices I made and why
+
+Building this was mostly a series of small trade-offs. Here are the ones that mattered.
+
+**Two packages, not one.** `jevad` is the server, `jeva-model` is the library. The library does the math, the server does HTTP, queues and caching. Keeping them separate makes each easier to reason about, though it does mean installing the library first.
+
+**A native API, plus a chat compatibility layer.** `/v1/decide` is the interface I actually wanted: state, questions, probabilities. Most tools only speak chat completions, so that endpoint accepts a JSON spec in the last message and returns the decision as text. It trades some elegance for compatibility, and the docs are explicit about that.
+
+**Why not vLLM.** The generation optimizations exist to make a decode loop faster. There is no decode loop here, so token-level scheduling doesn't really apply. A small queue that batches whole requests covers the actual workload without pulling in a full generation engine.
+
+**One worker, short queue.** One GPU, one model lock. One worker takes jobs, waits 5ms, runs up to 8 decide requests in one pass. The queue is capped: 429 when full, 504 on timeout. Set max batch to 1 when latency matters more than throughput.
+
+**Only decide gets batched.** Rank is already one call, and cache operations are cheap. Keeping them simple avoids unnecessary complexity.
+
+**Caching turned out to matter most.** Options don't know about the state or question, so I can cache them by text, reuse them across questions, and prime a bank before traffic. Repeats went from ~130ms to ~10ms, and primed options cost zero. One caveat: caches are keyed by text, so they need to be per tenant. That's the next step.
+
+**4-bit backbone, full precision head, no LoRA merge.** 8.8GB doesn't fit in 8GB. NF4 gets it to 3.6GiB. Merging into a quantized base isn't supported, so the adapter runs at runtime. I haven't compared 4-bit against bf16 accuracy, so it's worth validating on your own data.
+
+**Streaming is chunked, not token-by-token.** The model emits no tokens. I split the decision JSON into chunks so chat clients work, and the docs describe it accurately.
+
+**Freeze, then refactor.** Before splitting the 495 line app, I saved golden responses for every route and made them tests. The refactor is seven commits, tests green after each one.
+
+**Still on the list:** tenant cache isolation, rate limits, SSO, audit logs, a batch API, and calibration. Those are the enterprise gaps I'd close next.
+
+---
+
+**Upstream documentation.** The sections below are the original Jeva documentation, kept for installation, inference, evaluation, and fine-tuning.
+
 Jeva is a system one model (e.g., Jev) with native design. Give it a state and typed
 questions; get candidate probabilities, a Boolean probability, or an expected
 rubric score. The language encoder represents the state and each option
